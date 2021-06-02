@@ -1,0 +1,349 @@
+<html>
+
+<head>
+  <style>
+    #label {
+      float: left;
+      padding-right: 5px;
+      width: 105px;
+      /* text-align: center; */
+    }
+  </style>
+</head>
+
+<body>
+  <%- partial('../partial/sidemenu.ejs') %>
+    <div class="content admin w-100">
+      <h5 class="main-heading1">最新消息管理<span class="highlight">系統</span></h5>
+
+      <form class="ajax-with-preview" action="/admin/news/detail/<%=news.id%>" method="POST"
+        data-callback200="location.assign('/admin/news/');">
+
+        <section>
+          <h6 class="main-heading2 mb-0">
+            <%= req.path.indexOf('create') !==-1 ? '發表' :'更新' %>消息
+          </h6>
+          <div class="container-fluid">
+            <div class="row">
+
+              <div class="col-12 form-group d-flex required">
+                <label class="flex-shrink-0 col-form-label" id="label">發表日期</label>
+                <input class="form-control" type="date" name="News[startDate]" id="startDate" required
+                  oninvalid="setCustomValidity('請輸入資料')" onchange="try{setCustomValidity('')}catch(e){}">
+              </div>
+            </div>
+
+
+
+            <div class="row">
+              <div class="col-12 form-group d-flex required">
+                <label class="flex-shrink-0 col-form-label" id="label">分類</label>
+                <input class="form-control" type="text" name="News[category]" value="<%=news.category%>" list="cat_list"
+                  required oninvalid="setCustomValidity('請輸入資料')" onchange="try{setCustomValidity('')}catch(e){}">
+                <datalist id="cat_list">
+                  <option value="特別通告">
+                  <option value="特別通告以及本會運動員及海外比賽消息">
+                  <option value="本地活動及比賽消息">
+                </datalist>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex required">
+                <label class="flex-shrink-0 col-form-label" id="label">名稱</label>
+                <input class="form-control" type="text" name="News[newsName]" value="<%= news.newsName %>" required
+                  oninvalid="setCustomValidity('請輸入資料')" onchange="try{setCustomValidity('')}catch(e){}">
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex required">
+                <label class="flex-shrink-0 col-form-label" id="label">內文</label>
+                <textarea class="form-control" name="News[content]" required oninvalid="setCustomValidity('請輸入資料')"
+                  onchange="try{setCustomValidity('')}catch(e){}"><%=news.content%></textarea>
+              </div>
+            </div>
+
+
+            <!-- <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input id="getFileName" style="border:none;" name="News[attachmentName]"
+                  value="<%=news.attachmentName%>" readonly>
+                <input type="file" id="fileName" onchange="handleFile(this.files)" />
+                <div id="preview"></div>
+              </div>
+            </div> -->
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName', 'News[attachmentName]')">
+                <input id="getFileName" style="border:none;" name="News[attachmentName]"
+                  value="<%=news.attachmentName%>" readonly>
+                <input type="file" id="fileName"
+                  onchange="handleFile(this.files, 'News[attachment]', 'fileName', 'getFileName', 'News[attachmentName]','preview', 'attdata' )" />
+                <div id="preview"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName2', 'News[attachmentName2]')">
+                <input id="getFileName2" style="border:none;" name="News[attachmentName2]"
+                  value="<%=news.attachmentName2%>" readonly>
+                <input type="file" id="fileName2"
+                  onchange="handleFile(this.files, 'News[attachment2]', 'fileName2', 'getFileName2', 'News[attachmentName2]','preview2' )" />
+                <div id="preview2"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName3', 'News[attachmentName3]')">
+                <input id="getFileName3" style="border:none;" name="News[attachmentName3]"
+                  value="<%=news.attachmentName3%>" readonly>
+                <input type="file" id="fileName3"
+                  onchange="handleFile(this.files, 'News[attachment3]', 'fileName3', 'getFileName3', 'News[attachmentName3]','preview3' )" />
+                <div id="preview3"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName4', 'News[attachmentName4]')">
+                <input id="getFileName4" style="border:none;" name="News[attachmentName4]"
+                  value="<%=news.attachmentName4%>" readonly>
+                <input type="file" id="fileName4"
+                  onchange="handleFile(this.files, 'News[attachment4]', 'fileName4', 'getFileName4', 'News[attachmentName4]','preview4' )" />
+                <div id="preview4"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName5', 'News[attachmentName5]')">
+                <input id="getFileName5" style="border:none;" name="News[attachmentName5]"
+                  value="<%=news.attachmentName5%>" readonly>
+                <input type="file" id="fileName5"
+                  onchange="handleFile(this.files, 'News[attachment5]', 'fileName5', 'getFileName5', 'News[attachmentName5]','preview5' )" />
+                <div id="preview5"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName6', 'News[attachmentName6]')">
+                <input id="getFileName6" style="border:none;" name="News[attachmentName6]"
+                  value="<%=news.attachmentName6%>" readonly>
+                <input type="file" id="fileName6"
+                  onchange="handleFile(this.files, 'News[attachment6]', 'fileName6', 'getFileName6', 'News[attachmentName6]','preview6' )" />
+                <div id="preview6"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName7', 'News[attachmentName7]')">
+                <input id="getFileName7" style="border:none;" name="News[attachmentName7]"
+                  value="<%=news.attachmentName7%>" readonly>
+                <input type="file" id="fileName7"
+                  onchange="handleFile(this.files, 'News[attachment7]', 'fileName7', 'getFileName7', 'News[attachmentName7]','preview7' )" />
+                <div id="preview7"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName8', 'News[attachmentName8]')">
+                <input id="getFileName8" style="border:none;" name="News[attachmentName8]"
+                  value="<%=news.attachmentName8%>" readonly>
+                <input type="file" id="fileName8"
+                  onchange="handleFile(this.files, 'News[attachment8]', 'fileName8', 'getFileName8', 'News[attachmentName8]','preview8' )" />
+                <div id="preview8"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName9', 'News[attachmentName9]')">
+                <input id="getFileName9" style="border:none;" name="News[attachmentName9]"
+                  value="<%=news.attachmentName9%>" readonly>
+                <input type="file" id="fileName9"
+                  onchange="handleFile(this.files, 'News[attachment9]', 'fileName9', 'getFileName9', 'News[attachmentName9]','preview9' )" />
+                <div id="preview9"></div>
+                <br>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 form-group d-flex">
+                <label class="flex-shrink-0 col-form-label" id="label">附件</label>
+                <input type="button" class="btn btn-danger" value="X" onclick="deletefile('getFileName10', 'News[attachmentName10]')">
+                <input id="getFileName10" style="border:none;" name="News[attachmentName10]"
+                  value="<%=news.attachmentName10%>" readonly>
+                <input type="file" id="fileName10"
+                  onchange="handleFile(this.files, 'News[attachment10]', 'fileName10', 'getFileName10', 'News[attachmentName10]','preview10' )" />
+                <div id="preview10"></div>
+                <br>
+              </div>
+            </div>
+
+
+            <div class="form-group d-flex">
+              <label class="flex-shrink-0 col-form-label">通過電郵發送最新消息至</label> <!-- via Email, Send the latest new to -->
+              <input class="form-control" type="checkbox" id="member" name="News[userGroup]" value="member">
+              <label class="flex-shrink-0 col-form-label">會員</label><!-- Member -->
+              <input class="form-control" type="checkbox" id="coach" name="News[userGroup]" value="coach">
+              <label class="flex-shrink-0 col-form-label">教練</label><!-- Coach -->
+              <input class="form-control" type="checkbox" id="judge" name="News[userGroup]" value="judge">
+              <label class="flex-shrink-0 col-form-label">評判</label><!-- Judge -->
+              <input class="form-control" type="checkbox" id="athlete" name="News[userGroup]" value="athlete">
+              <label class="flex-shrink-0 col-form-label">運動員</label> <!-- Athletes -->
+              <input class="form-control" type="checkbox" style="display:none;" id="chk" name="News[userGroup]">
+            </div>
+
+
+
+
+            <div class="row">
+              <div class="col-12 form-group">
+                <button class="btn btn-primary" type="submit">
+                  <% if (req.path.endsWith('/detail')) { %>
+                    發表
+                    <% } else { %>
+                      更新
+                      <% } %>
+                </button>
+                <label><small><span style="color:red">＊</span>為必需填寫</small></label>
+              </div>
+            </div>
+          </div>
+        </section>
+      </form>
+
+    </div>
+
+
+    <script>
+
+        var checked = document.querySelectorAll('input:checked');
+
+        if (checked.length === 0) {
+          // there are no checked checkboxes
+          document.getElementById("chk").checked = true;
+          document.getElementById('chk').value = "none";
+        }
+
+
+    </script>
+
+    <script>
+        var date = new Date('<%=news.startDate%>');
+
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        if (month < 10) month = "0" + month;
+        if (day < 10) day = "0" + day;
+
+        var today = year + "-" + month + "-" + day;
+
+
+        document.getElementById('startDate').value = today;
+    </script>
+
+    <script>
+        var date = new Date('<%=news.endDate%>');
+
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        if (month < 10) month = "0" + month;
+        if (day < 10) day = "0" + day;
+
+        var today = year + "-" + month + "-" + day;
+
+
+        document.getElementById('endDate').value = today;
+    </script>
+
+    <script>
+        var startDate = document.getElementById('startDate');
+        var endDate = document.getElementById('endDate');
+
+        startDate.addEventListener('change', function () {
+          if (startDate.value)
+            endDate.min = startDate.value;
+        }, false);
+        endDate.addEventListener('change', function () {
+          if (endDate.value)
+            startDate.max = endDate.value;
+        }, false);
+
+    </script>
+
+    <script>
+
+        function handleFile(files, attachment, fileName, getFileName, attachmentName, pre) {
+          //document.getElementById(getFileName).type = "hidden"
+
+          const file = files[0];
+
+          var preview = document.getElementById(pre);
+
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            preview.innerHTML = "";
+
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = attachment;
+            input.value = e.target.result;
+            preview.appendChild(input);
+
+
+            var input = document.getElementById(fileName);
+            var output = document.getElementById(getFileName);
+            output.name = attachmentName
+            for (var i = 0; i < input.files.length; ++i) {
+              output.value = input.files.item(i).name;
+            }
+          }
+          reader.readAsDataURL(file);
+
+        }
+
+        function deletefile(getFileName, attachmentName) {
+            var output = document.getElementById(getFileName);
+            output.name = attachmentName
+            output.value = "";
+
+        }
+
+
+
+    </script>
+
+</body>
+
+
+</html>

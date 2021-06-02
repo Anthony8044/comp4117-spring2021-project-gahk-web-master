@@ -1,0 +1,100 @@
+<style>
+    th.date {
+        width: 9em
+    }
+
+    th.action {
+        width: 9em
+    }
+
+    .title{
+      word-break: break-all;
+    }
+   
+</style>
+<%- partial('../partial/sidemenu.ejs') %>
+    <div class="content admin w-100">
+        <h5 class="main-heading1">
+            比賽時間管理<span class="highlight">系統</span> <!-- Competition Time Management -->
+            <!-- System -->
+            <a class="btn btn-primary btn-sm" href="/admin/events/create">新增條目</a> <!-- Create new one -->
+        </h5>
+        <% var data={}; events.forEach(function(item) { if (!data[item.category]) { data[item.category]=[]; }
+            data[item.category].push(item); }); %>
+            <% Object.keys(data).forEach(function(cat) { %>
+
+
+
+                <section>
+                    <h6 class="main-heading2 mb-0">
+                        <%=cat%>
+                    </h6>
+                    <table class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th width="15%"class="#">開始日期</th> <!-- Start Date -->
+                                <th width="30%"class="#">活動名稱</th> <!-- Compeition Name -->
+                                <th width="12%"class="#">場地</th> <!-- Venue -->
+                                <th width="12%"class="#">體育種類</th> <!-- Discipline -->
+                                <th width="12%" class="#">比賽種類</th> <!-- Compeition Category -->
+                                <th class="action">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% (data[cat] || []).forEach(function(item){%>
+
+                                <tr>
+                                    <td class="date">
+                                      <% if(new Date(item.start).getDate() < 10){%>0<%}%><%= new Date(item.start).getDate() %>-<% if(new Date(item.start).getMonth()+1 < 10){%>0<%}%><%= new Date(item.start).getMonth()+1 %>-<%= new Date(item.start).getFullYear() %>
+                                      <% if(item.nodate==""){%>
+                                      <%= new Date(item.start).toTimeString().substring(0,5) %>
+                                      <% }%>
+                                    </td>
+                                    <td class="title">
+                                      <%- item.title %>
+                                    </td>
+                                    <td>
+                                        <%- item.venue %>
+                                      </td>
+                                      <td>
+                                        <%- item.discipline %>
+                                      </td>
+                                      <td>
+                                        <%- item.category %>
+                                      </td>
+                                    <td class="action">
+                                      <a class="btn btn-primary" href="/admin/events/detail/<%=item.id%>">編輯</a>
+                                      <!-- <button class="btn btn-danger ajax-with-confirm" data-action="/admin/news/detail/<%=item.id%>" data-method="DELETE" data-callback200="location.reload(true);">刪除</button> -->
+                                      <button class="btn btn-danger" onclick="deleteEvents('<%=item.id%>')">刪除</button>
+                                    </td>
+                                  </tr>
+
+                                <% }); %>
+                        </tbody>
+                    </table>
+                </section>
+            <% }); %>
+    </div>
+
+
+    <script>
+        async function deleteEvents(id) {
+          var r = confirm("確定刪除?");
+    
+          if (r) {
+            var response = await fetch("/admin/events/detail/" + id, {
+              method: "DELETE"
+            });
+    
+            if (response.ok) {
+              location.assign('/admin/events/')
+            } else {
+              alert(response.status + ": " + response.statusText);
+            }
+    
+          } else {
+            alert("已刪除");
+          }
+        };
+      </script>

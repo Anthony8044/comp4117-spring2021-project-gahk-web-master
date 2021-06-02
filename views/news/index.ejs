@@ -1,0 +1,147 @@
+<aside class="news">
+  <section>
+    <h6 class="side-heading2">特別通告</h6>
+    <div class="news-special container-fluid">
+      <p>※由即日起，本會不會接收郵資不足的信件。爲確保郵遞無誤，請在投寄郵件時支付足額郵資及註明回郵地址</p>
+      <p>※<a href="http://www.gahk.org.hk/doc/Bad%20weather%20guideline.pdf" target="_blank">惡劣天氣情況處理</a></p>
+      <p>※<a href="http://www.gahk.org.hk/doc/GAHK_GPA_ChineseOutline_2019.pdf" target="_blank">本會運動員個人意外保險概要</a></p>
+      <p>※香港中學文憑考試 體育科-體操<br><a href="http://www.gahk.org.hk/doc/dsegym demo.wmv" target="_blank">示範片段</a></p>
+      <p>※健美體操新增規定套路育<br><a href="http://www.gahk.org.hk/doc/AER_Kindergarten.MOV" target="_blank">健美體操幼稚園組規定套路示範</a>
+      </p>
+      <p><a href="http://www.gahk.org.hk/doc/AER_Primary.mp4" target="_blank">健美體操小學組規定套路示範</a></p>
+    </div>
+  </section>
+  <section class="d-none d-lg-block">
+    <h6 class="side-heading2">快速連結</h6>
+    <ul class="list-unstyled">
+      <li>
+        <a class="fastlink link-training" href="/training">
+          <img class="w-100" src="images/home-fastlink-training-on.png" alt="訓綀班" />
+        </a>
+      </li>
+      <li>
+        <a class="fastlink link-competition" href="/competition">
+          <img class="w-100" src="images/home-fastlink-competition-on.png" alt="比賽消息" />
+        </a>
+      </li>
+      <li>
+        <a href="/training">
+          <img class="w-100" src="images/hh_logo_001_001.jpg" alt="訓綀班報名" />
+        </a>
+      </li>
+      <li>
+        <a href="/training">
+          <img class="w-100" src="images/hh_logo_001_002.jpg" alt="體操發展計劃現已接受報名" />
+        </a>
+      </li>
+    </ul>
+  </section>
+</aside>
+<style>
+  .wordwrap {
+    word-wrap: break-word;
+    white-space: initial;
+    display: inline-block;
+  }
+</style>
+
+<div class="content news">
+  <h5 class="main-heading1">最新<span class="highlight">消息</span></h5>
+
+
+  <% var data={}; news.forEach(function(item) { if (!data[item.category]) { data[item.category]=[]; }
+    data[item.category].push(item); }); %>
+    <% Object.keys(data).forEach(function(cat) { %>
+      <section>
+        <h6 class="main-heading2 mb-0">
+          <%=cat%>
+        </h6>
+        <table class="table table-striped table-sm" style="width: 100%">
+          <!-- <thead>
+            <tr>
+              <th class="date" style="width: 20%;">日期</th>
+              <th>內文</th>
+              <th class="action">
+              </th>
+            </tr>
+          </thead> -->
+          <tbody>
+            <% (data[cat] || []).forEach(function(item){%>
+              <tr>
+                <td class="date" style="width: 80em">
+                  <% if(new Date(item.startDate).getDate() < 10){%>0<%}%><%= new Date(item.startDate).getDate() %>-<% if(new Date(item.startDate).getMonth()+1 < 10){%>0<%}%><%= new Date(item.startDate).getMonth()+1 %>-<%= new Date(item.startDate).getFullYear() %>
+                </td>
+                <td class="wordwrap" style="width: 40em">
+                  <%= item.newsName %>
+                    <% if(item.newsName){ %>
+                      <br>
+                      <% }; %>
+                        <%= item.content %>
+                          <% if(item.attachmentName){ %>
+                            <a download="<%=item.attachmentName%>" href="<%=item.attachment%>" target="_blank"><%=item.attachmentName%></a>
+                            <% }if (item.attachmentName2){ %>
+                              <a download="<%=item.attachmentName2%>" href="<%=item.attachment2%>" target="_blank"><%=item.attachmentName2%></a>
+                              <% }if (item.attachmentName3){; %>
+                                <a download="<%=item.attachmentName3%>" href="<%=item.attachment3%>" target="_blank"><%=item.attachmentName3%></a>
+                                <% }if (item.attachmentName4){; %>
+                                  <a download="<%=item.attachmentName3%>" href="<%=item.attachment4%>" target="_blank"><%=item.attachmentName4%></a>
+                                  <% }if (item.attachmentName5){; %>
+                                    <a download="<%=item.attachmentName3%>" href="<%=item.attachment5%>" target="_blank"><%=item.attachmentName5%></a>
+                                    <% }if (item.attachmentName6){; %>
+                                      <a download="<%=item.attachmentName3%>" href="<%=item.attachment6%>" target="_blank"><%=item.attachmentName6%></a>
+                                      <% }if (item.attachmentName7){; %>
+                                        <a download="<%=item.attachmentName3%>" href="<%=item.attachment7%>" target="_blank"><%=item.attachmentName7%></a>
+                                        <% }if (item.attachmentName8){; %>
+                                          <a download="<%=item.attachmentName3%>" href="<%=item.attachment8%>" target="_blank"><%=item.attachmentName8%></a>
+                                          <% }if (item.attachmentName9){; %>
+                                            <a download="<%=item.attachmentName3%>" href="<%=item.attachment9%>" target="_blank"><%=item.attachmentName9%></a>
+                                            <% }if (item.attachmentName10){; %>
+                                              <a download="<%=item.attachmentName3%>" href="<%=item.attachment10%>" target="_blank"><%=item.attachmentName10%></a>
+                                              <%}%>
+
+                </td>
+              </tr>
+              <% }); %>
+          </tbody>
+        </table>
+      </section>
+      <% }); %>
+
+        <!-- 
+  <section>
+    <h6 class="main-heading2 mb-0">特別通告以及本會運動員及海外比賽消息</h6>
+    <div class="overflow-auto">
+      <table class="table table-striped">
+        <% news.forEach(function(model) { %>
+        <% if (model.category != "特別通告以及本會運動員及海外比賽消息") return; %>
+        <tr>
+          <td class="d-flex">
+            <time class="flex-shrink-0"><%=model.startDate.getDate()%>-<%=model.startDate.getMonth()+1%>-<%=model.startDate.getFullYear()%></time>
+            <p><%-model.content%> <% if (model.link) { %><a href="<%=model.link%>" target="_blank">報導</a><% } %></p>
+          </td>
+        </tr>
+        <% }); %>
+      </table>
+    </div>
+  </section>
+  <section>
+    <h6 class="main-heading2 mb-0">本地活動及比賽消息</h6>
+    <div class="overflow-auto">
+      <table class="table table-striped">
+        <% news.forEach(function(model) { %>
+        <% if (model.category != "本地活動及比賽消息") return; %>
+        <tr>
+          <td class="d-flex">
+            <time class="flex-shrink-0"><%=model.startDate.getDate()%>-<%=model.startDate.getMonth()+1%>-<%=model.startDate.getFullYear()%></time>
+            <p>
+              <%-model.content%>
+            </p>
+          </td>
+        </tr>
+        <% }); %>
+      </table>
+    </div>
+  </section>  -->
+
+
+</div>

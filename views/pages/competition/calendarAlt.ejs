@@ -1,0 +1,526 @@
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        .table1 {
+            width: 85%;
+            background-color: rgb(210, 233, 245);
+            justify-content: space-around;
+            display: flex;
+            flex-wrap: wrap
+        }
+
+        .item {
+            justify-content: center;
+            align-items: center;
+        }
+
+        #botton_Filtering {
+            width: 140px;
+            /* background-color: rgb(117, 186, 247); */
+            /* color: rgb(255, 255, 255); */
+            border-radius: 12px;
+            margin-left: 40px;
+            margin-top: 12px;
+            margin-bottom: 12px;
+            padding: 6px;
+        }
+
+        #year,
+        #venue,
+        #discipline,
+        #category {
+            margin-top: 12px;
+            margin-bottom: 12px;
+            width: 180px;
+            text-align-last: center;
+        }
+
+        #rows tr:hover td,
+        #rows tr:hover td.highlight {
+            background-color: #dcfac9;
+            cursor: pointer;
+        }
+
+        #calendar {
+            margin-left: auto;
+            margin-right: auto;
+            /* text-align: center; */
+            width: 95%
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            padding: 10px;
+        }
+
+        #listTitle::before {
+            content: "■";
+            color: rgb(162, 138, 240);
+            display: inline-block;
+            width: 2em;
+        }
+
+        #title,
+        #listTitle {
+            word-break: break-all;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="content training w-100">
+        <h5 class="main-heading1">本地<span class="highlight">比賽</span></h5>
+
+
+        <!-- Render the filter form -->
+        <form action='/competition'>
+
+            <br>
+            <div class="container">
+                <div class="table1" id="table1">
+                    <div class="item">
+                        <select class="form-control" name="year" id="year">
+                            <option value="">--選擇年份--</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2014">2014</option>
+                            <option value="2013">2013</option>
+                            <option value="2012">2012</option>
+                            <option value="2011">2011</option>
+                        </select>
+                    </div>
+
+                    <div class="item">
+                        <select class="form-control" name="discipline" id="discipline">
+                            <option value="">--選擇體操類別--</option>
+                            <option value="競技體操">競技體操</option>
+                            <option value="藝術體操">藝術體操</option>
+                            <option value="彈網">彈網</option>
+                            <option value="健美體操">健美體操</option>
+                            <option value="技巧體操">技巧體操</option>
+                            <option value="普及體操">普及體操</option>
+                            <option value="跑酷">跑酷</option>
+                        </select>
+                    </div>
+
+                    <div class="item">
+                        <select class="form-control" name="category" id="category">
+                            <option value="">--選擇比賽類別--</option>
+                            <option value="國際邀請賽">國際邀請賽</option>
+                            <option value="邀請賽">邀請賽</option>
+                            <option value="分齡賽">分齡賽</option>
+                            <option value="公開賽">公開賽</option>
+                            <option value="學界賽">學界賽</option>
+                        </select>
+                    </div>
+
+
+                    <div class="item">
+                        <select class="form-control" name="venue" id="venue">
+                            <option value="">--選擇場地--</option>
+                            <optgroup label="新界">
+                                <option value="蕙荃體育館">蕙荃體育館</option>
+                                <option value="荃灣體育館">荃灣體育館</option>
+                                <option value="馬鞍山體育館">馬鞍山體育館</option>
+                            </optgroup>
+                            <optgroup label="港島">
+                                <option value="港灣道體育館">港灣道體育館</option>
+                                <option value="伊利沙伯體育館">伊利沙伯體育館</option>
+                            </optgroup>
+                            <optgroup label="九龍">
+                                <!-- <option value="">--</option> -->
+                            </optgroup>
+                        </select>
+                    </div>
+
+                    <div class="item">
+                        <div class="control">
+                            <button class="btn btn-primary" id="botton_Filtering" type="submit">搜尋</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </form>
+
+
+        <!-- Render the Eventclicked popup -->
+        <div class="container-fluid">
+            <div id='calendar'></div>
+            <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Render the Events List -->
+        <section>
+            <h6 class="main-heading2 mb-0">
+                比賽
+            </h6>
+            <table class="table table-striped table-sm" id="list">
+                <thead>
+                    <tr>
+                        <th class="#">日期</th> <!-- Date -->
+                        <th class="#">活動名稱</th> <!-- Compeition Name -->
+                        <th class="#">場地</th> <!-- Venue -->
+                        <th class="#">體育種類</th> <!-- Discipline -->
+                        <th class="#">比賽種類</th> <!-- Compeition Category -->
+                        <th class="action">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="rows">
+                    <% events.forEach( function(events) { %>
+
+                        <tr>
+                            <td class="date">
+                                <% if(new Date(events.start).getDate() < 10){%>0<%}%><%= new Date(events.start).getDate() %>-<% if(new Date(events.start).getMonth()+1 < 10){%>0<%}%><%= new Date(events.start).getMonth()+1 %>-<%= new Date(events.start).getFullYear() %>
+                            </td>
+                            <td id="title" width="30%">
+                                <%- events.title %>
+                            </td>
+                            <td width="20%">
+                                <%- events.venue %>
+                            </td>
+                            <td width="15%">
+                                <%- events.discipline %>
+                            </td>
+                            <td width="15%">
+                                <%- events.category %>
+                            </td>
+                            <td style="display:none;">
+                                <%= new Date(events.start).toDateString() %>
+                            </td>
+                            <td style="display:none;">
+                                <%= events.id %>
+                            </td>
+                        </tr>
+
+                        <% }); %>
+                </tbody>
+                <tbody id="noData">
+                </tbody>
+            </table>
+        </section>
+
+
+    </section>
+
+
+</body>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@3.10.2/dist/fullcalendar.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/locale-all.min.js'></script>
+
+
+
+
+
+
+<script>
+
+    jQuery(document).ready(function ($) {
+
+        $('#calendar').fullCalendar({
+            events: {
+                url: '/events/json',
+            },
+            eventColor: '#509ac9',
+            displayEventTime: false,
+            nextDayThreshold: '00:00:00',
+            locale: "zh-HK",
+            header: {
+                left: '',
+                center: 'prev title next',
+                right: '',
+            },
+            eventClick: function (event) {
+                $("#successModal").modal("show");
+                var calstart = event.start.toISOString().replace(/[-:.]/g, '');
+                var calend = event.end.toISOString().replace(/[-:.]/g, '');
+                var id = event.id;
+
+                var venueLink;
+
+                if (event.venue == "荃灣體育館") {
+                    venueLink = "https://www.google.com/maps/place/%E8%8D%83%E7%81%A3%E9%AB%94%E8%82%B2%E9%A4%A8/@22.3660761,114.1099949,17z/data=!3m1!4b1!4m5!3m4!1s0x3403f8e90e4a3baf:0x3ba122dd4747710b!8m2!3d22.36589!4d114.1123685";
+                } else if (event.venue == "馬鞍山體育館") {
+                    venueLink = "https://www.google.com/maps/place/%E9%A6%AC%E9%9E%8D%E5%B1%B1%E9%AB%94%E8%82%B2%E9%A4%A8/@22.4260395,114.2208166,15z/data=!4m8!1m2!2m1!1z6aas6Z6N5bGx6auU6IKy6aSo!3m4!1s0x340408b198a86525:0x6b1ba64430997264!8m2!3d22.4260158!4d114.2295379";
+                } else if (event.venue == "蕙荃體育館") {
+                    venueLink = "https://www.google.com/maps/place/%E8%95%99%E8%8D%83%E9%AB%94%E8%82%B2%E9%A4%A8/@22.37215,114.1135105,15z/data=!3m1!4b1!4m5!3m4!1s0x3403f88d7d223e0f:0x6b6c380ef54628f9!8m2!3d22.3721419!4d114.1222536";
+                } else if (event.venue == "港灣道體育館") {
+                    venueLink = "https://www.google.com/maps/place/%E6%B8%AF%E7%81%A3%E9%81%93%E9%AB%94%E8%82%B2%E9%A4%A8/@22.281604,114.1676912,15z/data=!3m1!4b1!4m5!3m4!1s0x340400590b7d1311:0xd0d0b45d06d6ffc8!8m2!3d22.2815729!4d114.1764246";
+                } else if (event.venue == "伊利沙伯體育館") {
+                    venueLink = "https://www.google.com/maps/place/%E4%BC%8A%E5%88%A9%E6%B2%99%E4%BC%AF%E9%AB%94%E8%82%B2%E9%A4%A8/@22.2751971,114.1702376,15z/data=!3m1!4b1!4m5!3m4!1s0x3404005aa2570cdd:0x42e8bff16c3a0f97!8m2!3d22.2751775!4d114.1789709";
+                }
+
+
+                var str = '<ul>';
+                if (event.title) {
+                    str += '<h4><li id="listTitle">' + event.title + "</li></h4>";
+                }
+                if (event.nodate =="") {
+                    var splStartDate = (new Date(event.start.toString())).toLocaleDateString().split("/");
+                    var startDate = splStartDate.join("-") + " " + ((new Date(event.start.toString())).toTimeString()).substring(0, 5);
+                    var splEndDate = (new Date(event.end.toString())).toLocaleDateString().split("/");
+                    var endDate = splEndDate.join("-") + " " + ((new Date(event.end.toString())).toTimeString()).substring(0, 5);
+                    str += ' <h5><li style="padding-left:45px">' + startDate + " 至 " + endDate + '</li></h5>';
+                }else{
+                    var splStartDate = (new Date(event.start.toString())).toLocaleDateString().split("/");
+                    var startDate = splStartDate.join("-");
+                    var splEndDate = (new Date(event.end.toString())).toLocaleDateString().split("/");
+                    var endDate = splEndDate.join("-");
+                    str += ' <h5><li style="padding-left:45px">' + startDate + " 至 " + endDate + '</li></h5>';
+
+                }
+                if (event.venue) {
+                    str += '<h5><li><a href="' + venueLink + '" target="_blank"><i class="material-icons" style="font-size:16px;">place&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + event.venue + '</i></a></li></h5><br>';
+                }
+                if (event.remarks) {
+                    str += '<p class="remarks">備註：<span style="color: blue">' + event.remarks + '</span></p>';
+                }
+                if (event.attachmentName) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName + '" href="' + event.attachment + '" target="_blank">' + event.attachmentName + '</a></p>';
+                }
+                if (event.attachmentName2) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName2 + '" href="' + event.attachment2 + '" target="_blank">' + event.attachmentName2 + '</a></p>';
+                }
+                if (event.attachmentName3) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName3 + '" href="' + event.attachment3 + '" target="_blank">' + event.attachmentName2 + '</a></p>';
+                }
+                if (event.attachmentName4) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName4 + '" href="' + event.attachment4 + '" target="_blank">' + event.attachmentName4 + '</a></p>';
+                }
+                if (event.attachmentName5) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName5 + '" href="' + event.attachment5 + '" target="_blank">' + event.attachmentName5 + '</a></p>';
+                }
+                if (event.attachmentName6) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName6 + '" href="' + event.attachment6 + '" target="_blank">' + event.attachmentName6 + '</a></p>';
+                }
+                if (event.attachmentName7) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName7 + '" href="' + event.attachment7 + '" target="_blank">' + event.attachmentName7 + '</a></p>';
+                }
+                if (event.attachmentName8) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName8 + '" href="' + event.attachment8 + '" target="_blank">' + event.attachmentName8 + '</a></p>';
+                }
+                if (event.attachmentName9) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName9 + '" href="' + event.attachment9 + '" target="_blank">' + event.attachmentName9 + '</a></p>';
+                }
+                if (event.attachmentName10) {
+                    str += '<p class="attachment">附件：<a download="' + event.attachmentName10 + '" href="' + event.attachment10 + '" target="_blank">' + event.attachmentName10 + '</a></p>';
+                }
+                if (event.links.startsWith("www.")) {
+                    str += '<p class="onlineForm">網上報名：<a href="//' + event.links + '" target="_blank" }>' + event.linksName + '</a></p>';
+                }else if (event.links.startsWith("http")) {
+                    str += '<p class="onlineForm">網上報名：<a href="' + event.links + '" target="_blank" }>' + event.linksName + '</a></p>';
+                }
+                str += '<a class="btn btn-primary" href="https://www.google.com/calendar/render?action=TEMPLATE&text=' + event.title + '&dates=' + calstart + '/' + calend + '&details=&location=' + event.venue + '&sf=true&output=xml" target="_blank">在Google日曆上加入比賽活動</a>'
+                str += '</ul>'
+                document.getElementById("table1").scrollIntoView();
+                $("#successModal .modal-body p").html(str);
+                $('#event-' + id + '.fc-content').css('background-color', '#dcfac9');
+                $('#event-' + id + '.fc-content').css('border-color', 'black');
+            },
+            initialView: 'dayGridMonth',
+
+
+            ///// Filter events on fullCalendar /////
+            eventRender: function (event, element, view) {
+                element.find('.fc-content').attr("id", "event-" + event.id);
+
+                var show_year = true, show_discipline = true, show_category = true, show_venue = true;
+
+                var discipline = getUrlParameter('discipline');
+                var category = getUrlParameter('category');
+                var venue = getUrlParameter('venue');
+                var year = getUrlParameter('year');
+
+                if (year && year.length > 0) {
+                    if (year[0] == "all") {
+                        show_year = true;
+                    } else {
+                        show_year = year.indexOf(event.start.year()) >= 0;
+                    }
+                }
+                if (discipline && discipline.length > 0) {
+                    if (discipline[0] == "all") {
+                        show_discipline = true;
+                    } else {
+                        show_discipline = discipline.indexOf(event.discipline) >= 0;
+                    }
+                }
+                if (category && category.length > 0) {
+                    if (category[0] == "all") {
+                        show_category = true;
+                    } else {
+                        show_category = category.indexOf(event.category) >= 0;
+
+                    }
+                }
+                if (venue && venue.length > 0) {
+                    if (venue[0] == "all") {
+                        show_venue = true;
+                    } else {
+                        show_venue = venue.indexOf(event.venue) >= 0;
+
+                    }
+                }
+
+                if (discipline != "" || category != "" || venue != "" || year != "") {
+                    if (show_year && show_discipline && show_category && show_venue) {
+                        element.css('background-color', 'yellow');
+                    }
+                }
+            },
+        });
+
+        $('#monthbox').click(function () {
+            var date = $(this).val();
+            $('#calendar').fullCalendar('gotoDate', date);
+        })
+
+        $("#successModal").on('hide.bs.modal', function () {
+            $('#calendar').fullCalendar('refetchEvents');
+        });
+
+
+
+        ///// Get event date on click and goto calendar month /////
+        $(function () {
+            if (window.addEventListener) {
+                window.addEventListener('load', run, false);
+            } else if (window.attachEvent) {
+                window.attachEvent('onload', run);
+            }
+
+            var disciplineFi = getUrlParameter('discipline');
+            var categoryFi = getUrlParameter('category');
+            var venueFi = getUrlParameter('venue');
+            var yearFi = getUrlParameter('year');
+
+            function run() {
+                var t = document.getElementById('rows');
+                var rows = t.rows; //rows collection - https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableElement
+                var date = new Date();
+                var laDate = new Date();
+                var today = new Date();
+
+                if (disciplineFi != "" || categoryFi != "" || venueFi != "" || yearFi != "") {
+                    for (var i = 0; i < rows.length; i++) { //go to the recent event date in future
+
+                        var cells = rows[i].cells;
+                        laDate = cells[5].innerHTML;
+                        var date2 = new Date(laDate);
+
+
+                        if (date2 > today) {
+                            $('#calendar').fullCalendar('gotoDate', laDate);
+                            break;
+                        }
+
+                    }
+
+                    try {          //if all filtered events in the past, hide the calendar 
+                        var eventCell = new Date(rows[0].cells[5].innerHTML);
+                        if (new Date(rows[rows.length - 1].cells[5].innerHTML) < today) {
+                            $("#calendar").hide();
+                        }
+
+                    } catch (message) { //if no result found, hide the table and show a message
+                        $("#calendar").hide();
+
+                        var row = document.getElementById("noData");
+
+                        var result = row.insertRow(0);
+                        var cell0 = result.insertCell(0);
+
+                        cell0.innerHTML = "沒有搜尋結果!"; //No result found
+
+
+                    }
+                }
+
+                for (var i = 0; i < rows.length; i++) {
+                    rows[i].onclick = function (event) {
+                        //event = event || window.event; // for IE8 backward compatibility
+                        //console.log(event, this, this.outerHTML);
+                        $('#calendar').show();
+
+                        var cells = this.cells; //cells collection
+                        var start = cells[5].innerHTML.trim();
+                        var id = cells[6].innerHTML.trim();
+
+                        $('#calendar').fullCalendar('gotoDate', start);
+
+                        setTimeout(function () {
+                            $("#calendar").fullCalendar(
+                                $('#event-' + id + '.fc-content').trigger('click')
+                            );
+                        }, 100);
+
+                    };
+                }
+            }
+
+        });
+
+
+        if (getUrlParameter('discipline') != "") {
+            $("#discipline").val(getUrlParameter('discipline'));
+        }
+        if (getUrlParameter('category') != "") {
+            $("#category").val(getUrlParameter('category'));
+        }
+        if (getUrlParameter('venue') != "") {
+            $("#venue").val(getUrlParameter('venue'));
+        }
+        if (getUrlParameter('year') != "") {
+            $("#year").val(getUrlParameter('year'));
+        }
+
+    })
+
+
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+        return false;
+    };
+
+
+
+</script>
